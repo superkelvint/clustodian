@@ -1,0 +1,20 @@
+{
+  "scenario_version": 1,
+  "operation": "participant_session_semantics",
+  "instances": ["node-a"],
+  "resources": [],
+  "steps": [
+    {"op": "connect", "instance": "node-a", "session": "a1"},
+    {"op": "checkpoint", "id": "before-expiry"},
+    {
+      "op": "expire_and_reconnect",
+      "instance": "node-a",
+      "from_session": "a1",
+      "to_session": "a2"
+    },
+    {"op": "checkpoint", "id": "after-expiry"}
+  ],
+  "session_comparisons": [
+    {"left": "a1", "right": "a2"}
+  ]
+}

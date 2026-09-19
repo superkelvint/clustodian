@@ -1,0 +1,7 @@
+{
+  "scenario_version": 1,
+  "operation": "etcd_coordination_semantics",
+  "case": "stale_revision_cas_rejected",
+  "parameters": {"key":"metadata/resource","initial_value":"v1","newer_value":"v2","stale_value":"stale"},
+  "expect": {"newer_write_succeeded":true,"stale_cas_succeeded":false,"final_value":"v2"}
+}

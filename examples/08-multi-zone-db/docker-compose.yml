@@ -1,0 +1,8 @@
+services:
+  etcd:
+    image: quay.io/coreos/etcd:v3.5.15
+    command: >-
+      /usr/local/bin/etcd --name zonedb-etcd
+      --data-dir /etcd-data --listen-client-urls http://0.0.0.0:23798
+      --advertise-client-urls http://127.0.0.1:23798
+    ports: ["23798:23798"]

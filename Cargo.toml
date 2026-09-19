@@ -1,0 +1,61 @@
+[package]
+name = "clustodian"
+version = "0.1.0"
+edition = "2021"
+rust-version = "1.80"
+license = "Apache-2.0"
+description = "A Rust control-plane library for partitioned, replicated systems, porting Apache Helix semantics."
+repository = "https://github.com/superkelvint/clustodian"
+readme = "README.md"
+keywords = ["distributed-systems", "control-plane", "rebalancing", "replication", "etcd"]
+categories = ["asynchronous", "algorithms"]
+# Keep workspace laboratories, examples, scripts, and generated artifacts out
+# of the published library. This policy belongs to the package, not the
+# workspace, because `cargo package` evaluates it at the crate boundary.
+exclude = [
+    "reference/**",
+    "tests/**",
+    "tools/**",
+    "examples/**",
+    "target/**",
+    "**/*.sh",
+    "AGENTS.md",
+    "implementation-plan/**",
+]
+
+[workspace]
+members = [
+    "tools/clustodian-conformance",
+    "tools/clustodian-chaos",
+    "tools/clustodian-test-support",
+    "examples/01-replicated-kv",
+    "examples/02-distributed-cache",
+    "examples/03-job-workers",
+    "examples/04-sharded-search",
+    "examples/05-object-store",
+    "examples/06-chat-cluster",
+    "examples/07-game-servers",
+    "examples/08-multi-zone-db",
+    "examples/09-rolling-restart",
+    "examples/10-ha-controllers",
+]
+resolver = "2"
+
+[features]
+shuttle = ["dep:shuttle", "dep:shuttle-tokio", "shuttle-tokio/shuttle"]
+m13-failpoints = ["dep:fail", "fail/failpoints"]
+
+[dependencies]
+etcd-client = { version = "0.15.0", features = ["tls", "tls-roots"] }
+fail = { version = "0.5.1", optional = true }
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+tokio = { version = "1.53.1", features = ["rt", "signal", "sync", "time"] }
+shuttle-tokio = { version = "=0.1.0", optional = true, features = ["rt", "signal", "sync", "time"] }
+shuttle = { version = "0.9.3", optional = true }
+
+[dev-dependencies]
+clustodian-test-support = { path = "tools/clustodian-test-support" }
+rand_chacha = "0.9.0"
+tempfile = "3.27.0"
+tokio = { version = "1.53.1", features = ["macros", "rt-multi-thread", "time"] }

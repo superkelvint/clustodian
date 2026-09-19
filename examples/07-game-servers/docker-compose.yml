@@ -1,0 +1,22 @@
+services:
+  etcd:
+    image: quay.io/coreos/etcd:v3.7.1
+    command:
+      - /usr/local/bin/etcd
+      - --name=game-demo-etcd
+      - --data-dir=/etcd-data
+      - --listen-client-urls=http://0.0.0.0:2379
+      - --advertise-client-urls=http://127.0.0.1:23797
+      - --listen-peer-urls=http://0.0.0.0:2380
+      - --initial-advertise-peer-urls=http://127.0.0.1:2380
+      - --initial-cluster=game-demo-etcd=http://127.0.0.1:2380
+      - --initial-cluster-state=new
+      - --initial-cluster-token=clustodian-game-demo
+      - --log-level=warn
+    ports:
+      - "23797:2379"
+    volumes:
+      - game-demo-etcd:/etcd-data
+
+volumes:
+  game-demo-etcd:

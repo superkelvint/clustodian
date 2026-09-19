@@ -1,0 +1,7 @@
+{
+  "scenario_version": 1,
+  "operation": "etcd_coordination_semantics",
+  "case": "stale_session_current_state_fenced",
+  "parameters": {"instance":"node-a","resource":"documents","partition":"documents_0","stale_state":"LEADER","fresh_state":"STANDBY"},
+  "expect": {"stale_write_accepted":false,"fresh_write_accepted":true,"active_state":"STANDBY","stale_state_active":false}
+}

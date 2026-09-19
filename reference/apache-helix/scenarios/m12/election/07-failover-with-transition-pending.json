@@ -1,0 +1,89 @@
+{
+  "scenario_version": 2,
+  "operation": "controller_election_failover_semantics",
+  "kind": "election_focus",
+  "name": "07-failover-with-transition-pending",
+  "description": "blocked participant callback across controller failover",
+  "cluster": {
+    "state_model": "LeaderStandby",
+    "controllers": [
+      "controller-a",
+      "controller-b",
+      "controller-c"
+    ],
+    "participants": [
+      {
+        "id": "node-a",
+        "zone": "z1",
+        "session": "a1"
+      },
+      {
+        "id": "node-b",
+        "zone": "z2",
+        "session": "b1"
+      }
+    ],
+    "resources": [
+      {
+        "name": "svc",
+        "partitions": 1,
+        "replicas": 2,
+        "rebalance": "CRUSH"
+      }
+    ]
+  },
+  "steps": [
+    {
+      "op": "start_controllers",
+      "controllers": [
+        "controller-a",
+        "controller-b",
+        "controller-c"
+      ]
+    },
+    {
+      "op": "start_participants",
+      "instances": [
+        "node-a",
+        "node-b"
+      ]
+    },
+    {
+      "op": "block_next_application_transition"
+    },
+    {
+      "op": "create_resources"
+    },
+    {
+      "op": "await_pending_transition"
+    },
+    {
+      "op": "checkpoint",
+      "name": "pending"
+    },
+    {
+      "op": "kill_active_controller"
+    },
+    {
+      "op": "await_single_active_controller"
+    },
+    {
+      "op": "release_blocked_application_transition"
+    },
+    {
+      "op": "await_converged"
+    },
+    {
+      "op": "checkpoint",
+      "name": "settled"
+    }
+  ],
+  "expectations": {
+    "settled_checkpoints": [
+      "settled"
+    ],
+    "min_controller_failovers": 1,
+    "require_stale_controller_fence": false,
+    "require_session_replacement": false
+  }
+}

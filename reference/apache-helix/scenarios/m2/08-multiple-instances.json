@@ -1,0 +1,25 @@
+{
+  "scenario_version": 1,
+  "operation": "generate_transitions",
+  "state_model": {"kind": "built_in", "name": "LeaderStandby"},
+  "resource": {"name": "documents", "partitions": ["documents_0"]},
+  "instances": [
+    {"name": "node-a", "session_id": "session-a"},
+    {"name": "node-b", "session_id": "session-b"},
+    {"name": "node-c", "session_id": "session-c"}
+  ],
+  "current_state": {
+    "documents_0": {
+      "node-a": "STANDBY",
+      "node-b": "LEADER",
+      "node-c": "OFFLINE"
+    }
+  },
+  "target_state": {
+    "documents_0": {
+      "node-a": "LEADER",
+      "node-b": "STANDBY",
+      "node-c": "DROPPED"
+    }
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "scenario_version": 1,
+  "operation": "etcd_coordination_semantics",
+  "case": "watch_resume_from_revision",
+  "parameters": {"key":"metadata/resume","initial_value":"v1","before_disconnect":["v2"],"while_disconnected":["v3"],"after_resume":["v4"]},
+  "expect": {"first_observed_values":["v2"],"resumed_observed_values":["v3","v4"],"duplicate_after_resume":false,"gap_detected":false,"monotonic_revisions":true}
+}

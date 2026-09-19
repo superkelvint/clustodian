@@ -1,0 +1,131 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  schedule:
+    - cron: "23 3 * * *"
+
+env:
+  CARGO_TERM_COLOR: always
+  # etcd-client generates protobuf bindings during the build. The hosted
+  # runner installs protoc explicitly so this is also reproducible locally.
+  RUSTFLAGS: ""
+
+jobs:
+  library:
+    name: Library (${{ matrix.command }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        command:
+          - test -p clustodian --lib --no-default-features
+          - test --workspace --all-targets --no-default-features --exclude clustodian
+          - test --workspace --all-targets --all-features
+          - test --workspace --doc
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          components: clippy,rustfmt
+      - name: Install protobuf compiler
+        run: sudo apt-get update && sudo apt-get install --yes protobuf-compiler
+      - run: cargo fmt --all --check
+      - run: cargo clippy --workspace --all-targets --all-features -- -D warnings
+      - run: cargo ${{ matrix.command }}
+
+  msrv:
+    name: MSRV
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@1.80.0
+      - name: Install protobuf compiler
+        run: sudo apt-get update && sudo apt-get install --yes protobuf-compiler
+      - run: cargo +1.80.0 test -p clustodian --lib --no-default-features
+
+  package:
+    name: Package validation
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - name: Install protobuf compiler
+        run: sudo apt-get update && sudo apt-get install --yes protobuf-compiler
+      - run: cargo package --allow-dirty --list
+      - run: cargo package --allow-dirty
+      - run: cargo publish --dry-run --allow-dirty
+
+  etcd:
+    name: Real etcd (${{ matrix.features }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        features: ["", "--features m13-failpoints"]
+    services:
+      etcd:
+        image: quay.io/coreos/etcd:v3.5.16
+        ports:
+          - 2379:2379
+        env:
+          ETCD_NAME: ci-etcd
+          ETCD_ADVERTISE_CLIENT_URLS: http://0.0.0.0:2379
+          ETCD_LISTEN_CLIENT_URLS: http://0.0.0.0:2379
+          ETCD_INITIAL_ADVERTISE_PEER_URLS: http://0.0.0.0:2380
+          ETCD_LISTEN_PEER_URLS: http://0.0.0.0:2380
+          ETCD_INITIAL_CLUSTER: ci-etcd=http://0.0.0.0:2380
+          ETCD_INITIAL_CLUSTER_STATE: new
+          ETCD_INITIAL_CLUSTER_TOKEN: clustodian-ci
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - name: Install protobuf compiler
+        run: sudo apt-get update && sudo apt-get install --yes protobuf-compiler
+      - name: Run serialized etcd integration lane
+        env:
+          CLUSTODIAN_ETCD_TEST_ENDPOINT: http://127.0.0.1:2379
+        run: cargo test -p clustodian --test etcd_runtime --no-default-features ${{ matrix.features }} -- --test-threads=1
+      - name: Clean up local etcd processes
+        if: ${{ always() }}
+        run: pkill -x etcd || true
+
+  nightly-stress:
+    name: Nightly randomized and chaos coverage
+    if: github.event_name == 'schedule'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    services:
+      etcd:
+        image: quay.io/coreos/etcd:v3.5.16
+        ports:
+          - 2379:2379
+        env:
+          ETCD_NAME: ci-etcd
+          ETCD_ADVERTISE_CLIENT_URLS: http://0.0.0.0:2379
+          ETCD_LISTEN_CLIENT_URLS: http://0.0.0.0:2379
+          ETCD_INITIAL_ADVERTISE_PEER_URLS: http://0.0.0.0:2380
+          ETCD_LISTEN_PEER_URLS: http://0.0.0.0:2380
+          ETCD_INITIAL_CLUSTER: ci-etcd=http://0.0.0.0:2380
+          ETCD_INITIAL_CLUSTER_STATE: new
+          ETCD_INITIAL_CLUSTER_TOKEN: clustodian-ci
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - name: Install protobuf compiler
+        run: sudo apt-get update && sudo apt-get install --yes protobuf-compiler
+      - name: Run randomized stress lane
+        env:
+          CLUSTODIAN_ETCD_TEST_ENDPOINT: http://127.0.0.1:2379
+          CLUSTODIAN_RS_RANDOM_CASES: 50
+          CLUSTODIAN_RS_RANDOM_STEPS: 100
+        run: cargo test -p clustodian --test randomized_cluster_state_machine randomized_cluster_state_machine_stress -- --ignored
+      - name: Run crash matrix when its external stack is available
+        if: ${{ hashFiles('tools/clustodian-chaos/docker-compose.yml') != '' }}
+        run: ./tools/clustodian-chaos/scripts/run-nightly.sh
+      - name: Clean up local etcd processes
+        if: ${{ always() }}
+        run: pkill -x etcd || true

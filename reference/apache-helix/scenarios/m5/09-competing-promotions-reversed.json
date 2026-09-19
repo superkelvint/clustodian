@@ -1,0 +1,19 @@
+{
+  "scenario_version": 1,
+  "operation": "select_transitions",
+  "state_model": {"kind": "built_in", "name": "LeaderStandby"},
+  "resource": {"name": "documents", "partitions": ["documents_0"]},
+  "replicas": 2,
+  "instances": [
+    {"name": "node-a", "session_id": "session-a"},
+    {"name": "node-b", "session_id": "session-b"}
+  ],
+  "live_instances": ["node-a", "node-b"],
+  "preference_lists": {"documents_0": ["node-a", "node-b"]},
+  "current_state": {"documents_0": {"node-a": "STANDBY", "node-b": "STANDBY"}},
+  "candidate_transitions": [
+    {"partition": "documents_0", "instance": "node-b", "from": "STANDBY", "to": "LEADER"},
+    {"partition": "documents_0", "instance": "node-a", "from": "STANDBY", "to": "LEADER"}
+  ],
+  "pending_transitions": []
+}

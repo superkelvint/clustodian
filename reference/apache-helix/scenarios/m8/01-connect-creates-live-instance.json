@@ -1,0 +1,11 @@
+{
+  "scenario_version": 1,
+  "operation": "participant_session_semantics",
+  "instances": ["node-a"],
+  "resources": [],
+  "steps": [
+    {"op": "connect", "instance": "node-a", "session": "a1"},
+    {"op": "checkpoint", "id": "connected"}
+  ],
+  "session_comparisons": []
+}

@@ -1,0 +1,15 @@
+{
+  "scenario_version": 1,
+  "operation": "participant_runtime_semantics",
+  "participant": {"instance":"node-a","initial_session":"p1","state_model":"LeaderStandby"},
+  "handler_behaviors": {
+    "m1":{"kind":"block_then_success","token":"block-1"}
+  },
+  "steps": [
+    {"op":"send_transition","message_id":"m1","resource":"documents","partition":"documents_0","target_session":"p1","from":"OFFLINE","to":"STANDBY"},
+    {"op":"wait_handler_entered","message_id":"m1","token":"block-1"},
+    {"op":"expire_and_reconnect","from_session":"p1","to_session":"p2"},
+    {"op":"release_handler","message_id":"m1","token":"block-1"},
+    {"op":"checkpoint","id":"after-old-handler-returned"}
+  ]
+}

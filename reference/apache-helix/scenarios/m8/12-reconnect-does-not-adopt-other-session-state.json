@@ -1,0 +1,40 @@
+{
+  "scenario_version": 1,
+  "operation": "participant_session_semantics",
+  "instances": ["node-a", "node-b"],
+  "resources": [
+    {"name": "documents", "partitions": ["documents_0", "documents_1"]}
+  ],
+  "steps": [
+    {"op": "connect", "instance": "node-a", "session": "a1"},
+    {"op": "connect", "instance": "node-b", "session": "b1"},
+    {
+      "op": "publish_current_state",
+      "instance": "node-a",
+      "session": "a1",
+      "resource": "documents",
+      "states": {"documents_0": "LEADER"}
+    },
+    {
+      "op": "publish_current_state",
+      "instance": "node-b",
+      "session": "b1",
+      "resource": "documents",
+      "states": {"documents_1": "LEADER"}
+    },
+    {"op": "disconnect", "instance": "node-a", "session": "a1"},
+    {"op": "connect", "instance": "node-a", "session": "a2"},
+    {
+      "op": "inject_session_current_state",
+      "instance": "node-a",
+      "session": "a1",
+      "resource": "documents",
+      "states": {"documents_0": "LEADER"}
+    },
+    {"op": "checkpoint", "id": "a-new-b-unchanged"}
+  ],
+  "session_comparisons": [
+    {"left": "a1", "right": "a2"},
+    {"left": "a2", "right": "b1"}
+  ]
+}

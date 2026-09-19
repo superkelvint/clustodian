@@ -1,0 +1,7 @@
+{
+  "scenario_version": 1,
+  "operation": "etcd_coordination_semantics",
+  "case": "explicit_revoke_removes_live_instance",
+  "parameters": {"instance":"node-a","lease_ttl_seconds":10},
+  "expect": {"live_before_revoke":true,"live_after_revoke":false}
+}

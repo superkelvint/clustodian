@@ -1,0 +1,26 @@
+{
+  "scenario_version": 1,
+  "operation": "inspect_state_model",
+  "state_model": {
+    "kind": "built_in",
+    "name": "LeaderStandby"
+  },
+  "queries": [
+    {"from": "LEADER", "to": "LEADER"},
+    {"from": "LEADER", "to": "STANDBY"},
+    {"from": "LEADER", "to": "OFFLINE"},
+    {"from": "LEADER", "to": "DROPPED"},
+    {"from": "STANDBY", "to": "LEADER"},
+    {"from": "STANDBY", "to": "STANDBY"},
+    {"from": "STANDBY", "to": "OFFLINE"},
+    {"from": "STANDBY", "to": "DROPPED"},
+    {"from": "OFFLINE", "to": "LEADER"},
+    {"from": "OFFLINE", "to": "STANDBY"},
+    {"from": "OFFLINE", "to": "OFFLINE"},
+    {"from": "OFFLINE", "to": "DROPPED"},
+    {"from": "DROPPED", "to": "LEADER"},
+    {"from": "DROPPED", "to": "STANDBY"},
+    {"from": "DROPPED", "to": "OFFLINE"},
+    {"from": "DROPPED", "to": "DROPPED"}
+  ]
+}

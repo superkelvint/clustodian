@@ -1,0 +1,7 @@
+{
+  "scenario_version": 1,
+  "operation": "etcd_coordination_semantics",
+  "case": "reconnect_creates_new_session",
+  "parameters": {"instance":"node-a","lease_ttl_seconds":2},
+  "expect": {"first_session_was_live":true,"old_session_live_after_reconnect":false,"new_session_live":true,"session_changed":true}
+}

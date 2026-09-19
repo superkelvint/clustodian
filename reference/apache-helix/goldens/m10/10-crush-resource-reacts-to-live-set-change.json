@@ -1,0 +1,221 @@
+{
+  "checkpoints": [
+    {
+      "active_current_state": {
+        "node-a": {
+          "resources": {},
+          "session": "a1"
+        },
+        "node-b": {
+          "resources": {},
+          "session": "b1"
+        }
+      },
+      "external_view": {},
+      "id": "two-live-instances",
+      "live_instances": {
+        "node-a": "a1",
+        "node-b": "b1"
+      },
+      "pending_transitions": [
+        {
+          "from": "OFFLINE",
+          "instance": "node-a",
+          "message_type": "STATE_TRANSITION",
+          "partition": "documents_3",
+          "resource": "documents",
+          "target_session": "a1",
+          "to": "STANDBY"
+        },
+        {
+          "from": "OFFLINE",
+          "instance": "node-a",
+          "message_type": "STATE_TRANSITION",
+          "partition": "documents_1",
+          "resource": "documents",
+          "target_session": "a1",
+          "to": "STANDBY"
+        },
+        {
+          "from": "OFFLINE",
+          "instance": "node-a",
+          "message_type": "STATE_TRANSITION",
+          "partition": "documents_0",
+          "resource": "documents",
+          "target_session": "a1",
+          "to": "STANDBY"
+        },
+        {
+          "from": "OFFLINE",
+          "instance": "node-a",
+          "message_type": "STATE_TRANSITION",
+          "partition": "documents_2",
+          "resource": "documents",
+          "target_session": "a1",
+          "to": "STANDBY"
+        },
+        {
+          "from": "OFFLINE",
+          "instance": "node-b",
+          "message_type": "STATE_TRANSITION",
+          "partition": "documents_1",
+          "resource": "documents",
+          "target_session": "b1",
+          "to": "STANDBY"
+        },
+        {
+          "from": "OFFLINE",
+          "instance": "node-b",
+          "message_type": "STATE_TRANSITION",
+          "partition": "documents_2",
+          "resource": "documents",
+          "target_session": "b1",
+          "to": "STANDBY"
+        },
+        {
+          "from": "OFFLINE",
+          "instance": "node-b",
+          "message_type": "STATE_TRANSITION",
+          "partition": "documents_3",
+          "resource": "documents",
+          "target_session": "b1",
+          "to": "STANDBY"
+        },
+        {
+          "from": "OFFLINE",
+          "instance": "node-b",
+          "message_type": "STATE_TRANSITION",
+          "partition": "documents_0",
+          "resource": "documents",
+          "target_session": "b1",
+          "to": "STANDBY"
+        }
+      ]
+    },
+    {
+      "active_current_state": {
+        "node-a": {
+          "resources": {},
+          "session": "a1"
+        },
+        "node-b": {
+          "resources": {},
+          "session": "b1"
+        },
+        "node-c": {
+          "resources": {},
+          "session": "c1"
+        }
+      },
+      "external_view": {},
+      "id": "three-live-instances",
+      "live_instances": {
+        "node-a": "a1",
+        "node-b": "b1",
+        "node-c": "c1"
+      },
+      "pending_transitions": [
+        {
+          "from": "OFFLINE",
+          "instance": "node-a",
+          "message_type": "STATE_TRANSITION",
+          "partition": "documents_3",
+          "resource": "documents",
+          "target_session": "a1",
+          "to": "STANDBY"
+        },
+        {
+          "from": "OFFLINE",
+          "instance": "node-a",
+          "message_type": "STATE_TRANSITION",
+          "partition": "documents_1",
+          "resource": "documents",
+          "target_session": "a1",
+          "to": "STANDBY"
+        },
+        {
+          "from": "OFFLINE",
+          "instance": "node-a",
+          "message_type": "STATE_TRANSITION",
+          "partition": "documents_0",
+          "resource": "documents",
+          "target_session": "a1",
+          "to": "STANDBY"
+        },
+        {
+          "from": "OFFLINE",
+          "instance": "node-a",
+          "message_type": "STATE_TRANSITION",
+          "partition": "documents_2",
+          "resource": "documents",
+          "target_session": "a1",
+          "to": "STANDBY"
+        },
+        {
+          "from": "OFFLINE",
+          "instance": "node-b",
+          "message_type": "STATE_TRANSITION",
+          "partition": "documents_1",
+          "resource": "documents",
+          "target_session": "b1",
+          "to": "STANDBY"
+        },
+        {
+          "from": "OFFLINE",
+          "instance": "node-b",
+          "message_type": "STATE_TRANSITION",
+          "partition": "documents_2",
+          "resource": "documents",
+          "target_session": "b1",
+          "to": "STANDBY"
+        },
+        {
+          "from": "OFFLINE",
+          "instance": "node-b",
+          "message_type": "STATE_TRANSITION",
+          "partition": "documents_3",
+          "resource": "documents",
+          "target_session": "b1",
+          "to": "STANDBY"
+        },
+        {
+          "from": "OFFLINE",
+          "instance": "node-b",
+          "message_type": "STATE_TRANSITION",
+          "partition": "documents_0",
+          "resource": "documents",
+          "target_session": "b1",
+          "to": "STANDBY"
+        },
+        {
+          "from": "OFFLINE",
+          "instance": "node-c",
+          "message_type": "STATE_TRANSITION",
+          "partition": "documents_0",
+          "resource": "documents",
+          "target_session": "c1",
+          "to": "STANDBY"
+        },
+        {
+          "from": "OFFLINE",
+          "instance": "node-c",
+          "message_type": "STATE_TRANSITION",
+          "partition": "documents_1",
+          "resource": "documents",
+          "target_session": "c1",
+          "to": "STANDBY"
+        },
+        {
+          "from": "OFFLINE",
+          "instance": "node-c",
+          "message_type": "STATE_TRANSITION",
+          "partition": "documents_2",
+          "resource": "documents",
+          "target_session": "c1",
+          "to": "STANDBY"
+        }
+      ]
+    }
+  ],
+  "operation": "controller_runtime_semantics"
+}

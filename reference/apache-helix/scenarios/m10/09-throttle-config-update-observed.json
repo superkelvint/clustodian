@@ -1,0 +1,21 @@
+{
+  "scenario_version": 1,
+  "operation": "controller_runtime_semantics",
+  "instance_configs": [
+    {"name":"node-a","zone":"zone-a"},
+    {"name":"node-b","zone":"zone-b"}
+  ],
+  "setup": [
+    {"op":"put_resource","resource":{"name":"documents","state_model":"LeaderStandby","placement":{"kind":"SEMI_AUTO","replicas":2,"preference_lists":{"documents_0":["node-a","node-b"]}}}},
+    {"op":"connect","instance":"node-a","session":"a1"},
+    {"op":"connect","instance":"node-b","session":"b1"},
+    {"op":"publish_current_state","instance":"node-a","session":"a1","resource":"documents","states":{"documents_0":"OFFLINE"}},
+    {"op":"publish_current_state","instance":"node-b","session":"b1","resource":"documents","states":{"documents_0":"OFFLINE"}},
+    {"op":"set_transition_throttle","scope":"CLUSTER","rebalance_type":"ANY","max_in_flight":0}
+  ],
+  "steps": [
+    {"op":"checkpoint","id":"throttled"},
+    {"op":"clear_transition_throttles"},
+    {"op":"checkpoint","id":"unthrottled"}
+  ]
+}

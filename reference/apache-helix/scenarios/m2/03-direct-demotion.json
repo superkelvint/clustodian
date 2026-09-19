@@ -1,0 +1,9 @@
+{
+  "scenario_version": 1,
+  "operation": "generate_transitions",
+  "state_model": {"kind": "built_in", "name": "LeaderStandby"},
+  "resource": {"name": "documents", "partitions": ["documents_0"]},
+  "instances": [{"name": "node-a", "session_id": "session-a"}],
+  "current_state": {"documents_0": {"node-a": "LEADER"}},
+  "target_state": {"documents_0": {"node-a": "STANDBY"}}
+}

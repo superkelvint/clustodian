@@ -1,0 +1,7 @@
+{
+  "scenario_version": 1,
+  "operation": "etcd_coordination_semantics",
+  "case": "lease_expiry_removes_live_instance",
+  "parameters": {"instance":"node-a","lease_ttl_seconds":2},
+  "expect": {"live_before_expiry":true,"live_after_expiry":false}
+}

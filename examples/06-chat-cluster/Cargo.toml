@@ -1,0 +1,26 @@
+[package]
+name = "clustodian-chat-cluster"
+version = "0.1.0"
+edition = "2021"
+publish = false
+description = "Partitioned WebSocket/chat showcase for Clustodian"
+
+[features]
+shuttle = []
+
+[dependencies]
+clustodian = { path = "../.." }
+futures-util = "0.3"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+tokio = { version = "1.53.1", features = ["macros", "net", "process", "rt-multi-thread", "signal", "sync", "time"] }
+tokio-tungstenite = { version = "0.27", default-features = false, features = ["connect", "handshake"] }
+
+[dev-dependencies]
+clustodian-test-support = { path = "../../tools/clustodian-test-support" }
+etcd-client = "0.15.0"
+tempfile = "3.27.0"
+
+[[bin]]
+name = "chat-cluster"
+path = "src/main.rs"

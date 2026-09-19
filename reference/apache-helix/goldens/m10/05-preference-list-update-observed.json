@@ -1,0 +1,83 @@
+{
+  "checkpoints": [
+    {
+      "active_current_state": {
+        "node-a": {
+          "resources": {
+            "documents": {
+              "documents_0": "LEADER"
+            }
+          },
+          "session": "a1"
+        },
+        "node-b": {
+          "resources": {
+            "documents": {
+              "documents_0": "STANDBY"
+            }
+          },
+          "session": "b1"
+        }
+      },
+      "external_view": {
+        "documents": {
+          "documents_0": {
+            "node-a": "LEADER",
+            "node-b": "STANDBY"
+          }
+        }
+      },
+      "id": "before-preference-change",
+      "live_instances": {
+        "node-a": "a1",
+        "node-b": "b1"
+      },
+      "pending_transitions": []
+    },
+    {
+      "active_current_state": {
+        "node-a": {
+          "resources": {
+            "documents": {
+              "documents_0": "LEADER"
+            }
+          },
+          "session": "a1"
+        },
+        "node-b": {
+          "resources": {
+            "documents": {
+              "documents_0": "STANDBY"
+            }
+          },
+          "session": "b1"
+        }
+      },
+      "external_view": {
+        "documents": {
+          "documents_0": {
+            "node-a": "LEADER",
+            "node-b": "STANDBY"
+          }
+        }
+      },
+      "id": "after-preference-change",
+      "live_instances": {
+        "node-a": "a1",
+        "node-b": "b1"
+      },
+      "pending_transitions": [
+        {
+          "from": "LEADER",
+          "instance": "node-a",
+          "message_type": "STATE_TRANSITION",
+          "partition": "documents_0",
+          "resource": "documents",
+          "target_session": "a1",
+          "to": "STANDBY"
+        }
+      ]
+    }
+  ],
+  "operation": "controller_runtime_semantics"
+}

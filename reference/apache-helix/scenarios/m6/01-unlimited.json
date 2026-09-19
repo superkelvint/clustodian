@@ -1,0 +1,31 @@
+{
+  "scenario_version": 1,
+  "operation": "compute_intermediate_and_throttle",
+  "state_model": {"kind": "built_in", "name": "LeaderStandby"},
+  "live_instances": ["node-a", "node-b", "node-c"],
+  "throttle_configs": [],
+  "pending_transitions": [],
+  "resources": [
+    {
+      "name": "documents",
+      "replicas": 2,
+      "min_active_replicas": 1,
+      "preference_lists": {
+        "documents_0": ["node-a", "node-b"],
+        "documents_1": ["node-a", "node-c"]
+      },
+      "current_state": {
+        "documents_0": {"node-a": "LEADER", "node-b": "OFFLINE"},
+        "documents_1": {"node-a": "LEADER", "node-c": "OFFLINE"}
+      },
+      "best_possible_state": {
+        "documents_0": {"node-a": "LEADER", "node-b": "STANDBY"},
+        "documents_1": {"node-a": "LEADER", "node-c": "STANDBY"}
+      },
+      "selected_transitions": [
+        {"resource": "documents", "partition": "documents_0", "instance": "node-b", "from": "OFFLINE", "to": "STANDBY", "message_type": "STATE_TRANSITION"},
+        {"resource": "documents", "partition": "documents_1", "instance": "node-c", "from": "OFFLINE", "to": "STANDBY", "message_type": "STATE_TRANSITION"}
+      ]
+    }
+  ]
+}

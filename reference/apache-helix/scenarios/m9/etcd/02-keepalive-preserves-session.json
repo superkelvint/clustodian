@@ -1,0 +1,7 @@
+{
+  "scenario_version": 1,
+  "operation": "etcd_coordination_semantics",
+  "case": "keepalive_preserves_session",
+  "parameters": {"instance":"node-a","lease_ttl_seconds":2,"observe_for_ttls":2},
+  "expect": {"live_after_wait":true,"session_unchanged":true}
+}

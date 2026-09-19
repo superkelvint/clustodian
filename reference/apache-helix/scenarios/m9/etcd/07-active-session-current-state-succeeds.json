@@ -1,0 +1,7 @@
+{
+  "scenario_version": 1,
+  "operation": "etcd_coordination_semantics",
+  "case": "active_session_current_state_succeeds",
+  "parameters": {"instance":"node-a","resource":"documents","partition":"documents_0","state":"STANDBY"},
+  "expect": {"publish_succeeded":true,"active_state":"STANDBY"}
+}

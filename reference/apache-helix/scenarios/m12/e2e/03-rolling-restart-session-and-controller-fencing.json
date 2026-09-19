@@ -1,0 +1,145 @@
+{
+  "scenario_version": 2,
+  "operation": "controller_election_failover_semantics",
+  "kind": "application_e2e",
+  "name": "03-rolling-restart-session-and-controller-fencing",
+  "description": "rolling restart + fencing",
+  "cluster": {
+    "state_model": "LeaderStandby",
+    "controllers": [
+      "controller-a",
+      "controller-b",
+      "controller-c"
+    ],
+    "participants": [
+      {
+        "id": "state-a",
+        "zone": "z1",
+        "session": "a1"
+      },
+      {
+        "id": "state-b",
+        "zone": "z2",
+        "session": "b1"
+      },
+      {
+        "id": "state-c",
+        "zone": "z3",
+        "session": "c1"
+      }
+    ],
+    "resources": [
+      {
+        "name": "ledger",
+        "partitions": 8,
+        "replicas": 3,
+        "rebalance": "SEMI_AUTO",
+        "preference_lists": {
+          "ledger_0": [
+            "state-a",
+            "state-b",
+            "state-c"
+          ],
+          "ledger_1": [
+            "state-b",
+            "state-c",
+            "state-a"
+          ],
+          "ledger_2": [
+            "state-c",
+            "state-a",
+            "state-b"
+          ],
+          "ledger_3": [
+            "state-a",
+            "state-b",
+            "state-c"
+          ],
+          "ledger_4": [
+            "state-b",
+            "state-c",
+            "state-a"
+          ],
+          "ledger_5": [
+            "state-c",
+            "state-a",
+            "state-b"
+          ],
+          "ledger_6": [
+            "state-a",
+            "state-b",
+            "state-c"
+          ],
+          "ledger_7": [
+            "state-b",
+            "state-c",
+            "state-a"
+          ]
+        }
+      }
+    ]
+  },
+  "steps": [
+    {
+      "op": "start_controllers",
+      "controllers": [
+        "controller-a",
+        "controller-b",
+        "controller-c"
+      ]
+    },
+    {
+      "op": "start_participants",
+      "instances": [
+        "state-a",
+        "state-b",
+        "state-c"
+      ]
+    },
+    {
+      "op": "create_resources"
+    },
+    {
+      "op": "await_converged"
+    },
+    {
+      "op": "checkpoint",
+      "name": "before_rolling_restart"
+    },
+    {
+      "op": "restart_participant",
+      "instance": "state-b",
+      "new_session_label": "b2"
+    },
+    {
+      "op": "assert_old_session_state_persisted",
+      "instance": "state-b"
+    },
+    {
+      "op": "checkpoint",
+      "name": "after_participant_reincarnation"
+    },
+    {
+      "op": "pause_active_controller_until_lease_expires"
+    },
+    {
+      "op": "resume_stale_controller"
+    },
+    {
+      "op": "await_converged"
+    },
+    {
+      "op": "checkpoint",
+      "name": "rolling_restart_converged"
+    }
+  ],
+  "expectations": {
+    "settled_checkpoints": [
+      "before_rolling_restart",
+      "rolling_restart_converged"
+    ],
+    "min_controller_failovers": 1,
+    "require_stale_controller_fence": false,
+    "require_session_replacement": true
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "scenario_version": 1,
+  "operation": "inspect_state_model",
+  "state_model": {
+    "kind": "built_in",
+    "name": "LeaderStandby"
+  },
+  "queries": [
+    {"from": "OFFLINE", "to": "STANDBY"},
+    {"from": "STANDBY", "to": "LEADER"},
+    {"from": "LEADER", "to": "STANDBY"},
+    {"from": "OFFLINE", "to": "DROPPED"}
+  ]
+}

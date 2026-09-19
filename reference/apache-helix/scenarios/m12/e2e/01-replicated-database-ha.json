@@ -1,0 +1,123 @@
+{
+  "scenario_version": 2,
+  "operation": "controller_election_failover_semantics",
+  "kind": "application_e2e",
+  "name": "01-replicated-database-ha",
+  "description": "replicated database HA",
+  "cluster": {
+    "state_model": "LeaderStandby",
+    "controllers": [
+      "controller-a",
+      "controller-b",
+      "controller-c"
+    ],
+    "participants": [
+      {
+        "id": "db-a",
+        "zone": "z1",
+        "session": "a1"
+      },
+      {
+        "id": "db-b",
+        "zone": "z2",
+        "session": "b1"
+      },
+      {
+        "id": "db-c",
+        "zone": "z3",
+        "session": "c1"
+      },
+      {
+        "id": "db-d",
+        "zone": "z4",
+        "session": "d1"
+      }
+    ],
+    "resources": [
+      {
+        "name": "orders",
+        "partitions": 6,
+        "replicas": 3,
+        "rebalance": "CRUSH"
+      }
+    ]
+  },
+  "steps": [
+    {
+      "op": "start_controllers",
+      "controllers": [
+        "controller-a",
+        "controller-b",
+        "controller-c"
+      ]
+    },
+    {
+      "op": "start_participants",
+      "instances": [
+        "db-a",
+        "db-b",
+        "db-c",
+        "db-d"
+      ]
+    },
+    {
+      "op": "create_resources"
+    },
+    {
+      "op": "await_converged"
+    },
+    {
+      "op": "checkpoint",
+      "name": "initial_database_ready"
+    },
+    {
+      "op": "kill_active_controller"
+    },
+    {
+      "op": "await_single_active_controller"
+    },
+    {
+      "op": "await_converged"
+    },
+    {
+      "op": "checkpoint",
+      "name": "after_controller_failover"
+    },
+    {
+      "op": "kill_partition_leader",
+      "resource": "orders",
+      "partition": "orders_0",
+      "remember_as": "failed_db_node"
+    },
+    {
+      "op": "await_converged"
+    },
+    {
+      "op": "checkpoint",
+      "name": "after_database_node_failure"
+    },
+    {
+      "op": "restart_remembered_participant",
+      "name": "failed_db_node",
+      "new_session_label": "restarted_session"
+    },
+    {
+      "op": "await_converged"
+    },
+    {
+      "op": "checkpoint",
+      "name": "after_database_node_rejoin"
+    }
+  ],
+  "expectations": {
+    "settled_checkpoints": [
+      "initial_database_ready",
+      "after_controller_failover",
+      "after_database_node_failure",
+      "after_database_node_rejoin"
+    ],
+    "min_controller_failovers": 1,
+    "require_stale_controller_fence": false,
+    "require_session_replacement": true
+  }
+}

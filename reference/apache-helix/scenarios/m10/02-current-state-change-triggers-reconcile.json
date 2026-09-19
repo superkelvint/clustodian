@@ -1,0 +1,20 @@
+{
+  "scenario_version": 1,
+  "operation": "controller_runtime_semantics",
+  "instance_configs": [
+    {"name": "node-a", "zone": "zone-a"},
+    {"name": "node-b", "zone": "zone-b"}
+  ],
+  "setup": [
+    {"op":"put_resource","resource":{"name":"documents","state_model":"LeaderStandby","placement":{"kind":"SEMI_AUTO","replicas":2,"preference_lists":{"documents_0":["node-a","node-b"]}}}},
+    {"op":"connect","instance":"node-a","session":"a1"},
+    {"op":"connect","instance":"node-b","session":"b1"},
+    {"op":"publish_current_state","instance":"node-a","session":"a1","resource":"documents","states":{"documents_0":"LEADER"}},
+    {"op":"publish_current_state","instance":"node-b","session":"b1","resource":"documents","states":{"documents_0":"STANDBY"}}
+  ],
+  "steps": [
+    {"op":"checkpoint","id":"before-change"},
+    {"op":"publish_current_state","instance":"node-b","session":"b1","resource":"documents","states":{"documents_0":"OFFLINE"}},
+    {"op":"checkpoint","id":"after-change"}
+  ]
+}

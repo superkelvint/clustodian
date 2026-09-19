@@ -1,0 +1,123 @@
+{
+  "scenario_version": 1,
+  "operation": "compute_crush_assignment",
+  "resource": "documents",
+  "partitions": [
+    "documents_0",
+    "documents_1",
+    "documents_2",
+    "documents_3",
+    "documents_4",
+    "documents_5",
+    "documents_6",
+    "documents_7",
+    "documents_8",
+    "documents_9",
+    "documents_10",
+    "documents_11",
+    "documents_12",
+    "documents_13",
+    "documents_14",
+    "documents_15",
+    "documents_16",
+    "documents_17",
+    "documents_18",
+    "documents_19",
+    "documents_20",
+    "documents_21",
+    "documents_22",
+    "documents_23",
+    "documents_24",
+    "documents_25",
+    "documents_26",
+    "documents_27",
+    "documents_28",
+    "documents_29",
+    "documents_30",
+    "documents_31",
+    "documents_32",
+    "documents_33",
+    "documents_34",
+    "documents_35",
+    "documents_36",
+    "documents_37",
+    "documents_38",
+    "documents_39",
+    "documents_40",
+    "documents_41",
+    "documents_42",
+    "documents_43",
+    "documents_44",
+    "documents_45",
+    "documents_46",
+    "documents_47",
+    "documents_48",
+    "documents_49",
+    "documents_50",
+    "documents_51",
+    "documents_52",
+    "documents_53",
+    "documents_54",
+    "documents_55",
+    "documents_56",
+    "documents_57",
+    "documents_58",
+    "documents_59",
+    "documents_60",
+    "documents_61",
+    "documents_62",
+    "documents_63"
+  ],
+  "state_counts": [
+    {
+      "state": "LEADER",
+      "count": 1
+    },
+    {
+      "state": "STANDBY",
+      "count": 1
+    }
+  ],
+  "max_partitions_per_instance": -1,
+  "instances": [
+    {
+      "name": "node-a",
+      "domain": {
+        "zone": "zone-a",
+        "instance": "node-a"
+      }
+    },
+    {
+      "name": "node-b",
+      "domain": {
+        "zone": "zone-b",
+        "instance": "node-b"
+      }
+    },
+    {
+      "name": "node-c",
+      "domain": {
+        "zone": "zone-c",
+        "instance": "node-c"
+      }
+    },
+    {
+      "name": "node-d",
+      "domain": {
+        "zone": "zone-d",
+        "instance": "node-d"
+      }
+    }
+  ],
+  "live_instances": [
+    "node-a",
+    "node-b",
+    "node-c",
+    "node-d"
+  ],
+  "topology": {
+    "path": "/zone/instance",
+    "fault_zone_type": "zone",
+    "end_node_type": "instance"
+  }
+}

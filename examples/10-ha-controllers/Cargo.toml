@@ -1,0 +1,22 @@
+[package]
+name = "clustodian-ha-controllers"
+version = "0.1.0"
+edition = "2021"
+publish = false
+
+[features]
+shuttle = []
+
+[dependencies]
+clustodian = { path = "../.." }
+etcd-client = "0.15.0"
+serde_json = "1"
+tokio = { version = "1.53.1", features = ["macros", "rt-multi-thread", "signal", "time"] }
+
+[dev-dependencies]
+clustodian-test-support = { path = "../../tools/clustodian-test-support" }
+tempfile = "3.27.0"
+
+[[bin]]
+name = "ha-controllers"
+path = "src/main.rs"

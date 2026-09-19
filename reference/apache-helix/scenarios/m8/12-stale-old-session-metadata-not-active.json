@@ -1,0 +1,39 @@
+{
+  "scenario_version": 1,
+  "operation": "participant_session_semantics",
+  "instances": ["node-a"],
+  "resources": [
+    {
+      "name": "documents",
+      "state_model": "LeaderStandby",
+      "partitions": ["documents_0"]
+    }
+  ],
+  "steps": [
+    {"op": "connect", "instance": "node-a", "session": "a1"},
+    {
+      "op": "publish_current_state",
+      "instance": "node-a",
+      "session": "a1",
+      "resource": "documents",
+      "states": {"documents_0": "LEADER"}
+    },
+    {
+      "op": "expire_and_reconnect",
+      "instance": "node-a",
+      "from_session": "a1",
+      "to_session": "a2"
+    },
+    {
+      "op": "inject_session_current_state",
+      "instance": "node-a",
+      "session": "a1",
+      "resource": "documents",
+      "states": {"documents_0": "LEADER"}
+    },
+    {"op": "checkpoint", "id": "stale-old-session-present"}
+  ],
+  "session_comparisons": [
+    {"left": "a1", "right": "a2"}
+  ]
+}

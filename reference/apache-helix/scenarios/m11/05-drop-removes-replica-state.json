@@ -1,0 +1,18 @@
+{
+  "scenario_version": 1,
+  "operation": "participant_runtime_semantics",
+  "participant": {"instance":"node-a","initial_session":"p1","state_model":"LeaderStandby"},
+  "handler_behaviors": {
+    "m1":{"kind":"success"},
+    "m2":{"kind":"success"},
+    "m3":{"kind":"success"}
+  },
+  "steps": [
+    {"op":"send_transition","message_id":"m1","resource":"documents","partition":"documents_0","target_session":"p1","from":"OFFLINE","to":"STANDBY"},
+    {"op":"checkpoint","id":"standby"},
+    {"op":"send_transition","message_id":"m2","resource":"documents","partition":"documents_0","target_session":"p1","from":"STANDBY","to":"OFFLINE"},
+    {"op":"checkpoint","id":"offline"},
+    {"op":"send_transition","message_id":"m3","resource":"documents","partition":"documents_0","target_session":"p1","from":"OFFLINE","to":"DROPPED"},
+    {"op":"checkpoint","id":"dropped"}
+  ]
+}

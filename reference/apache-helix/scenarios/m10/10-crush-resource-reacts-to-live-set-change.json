@@ -1,0 +1,19 @@
+{
+  "scenario_version": 1,
+  "operation": "controller_runtime_semantics",
+  "instance_configs": [
+    {"name":"node-a","zone":"zone-a"},
+    {"name":"node-b","zone":"zone-b"},
+    {"name":"node-c","zone":"zone-c"}
+  ],
+  "setup": [
+    {"op":"put_resource","resource":{"name":"documents","state_model":"LeaderStandby","placement":{"kind":"CRUSH","replicas":2,"partitions":["documents_0","documents_1","documents_2","documents_3"]}}},
+    {"op":"connect","instance":"node-a","session":"a1"},
+    {"op":"connect","instance":"node-b","session":"b1"}
+  ],
+  "steps": [
+    {"op":"checkpoint","id":"two-live-instances"},
+    {"op":"connect","instance":"node-c","session":"c1"},
+    {"op":"checkpoint","id":"three-live-instances"}
+  ]
+}

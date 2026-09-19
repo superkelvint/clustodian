@@ -1,0 +1,7 @@
+{
+  "scenario_version": 1,
+  "operation": "etcd_coordination_semantics",
+  "case": "compacted_watch_recovery",
+  "parameters": {"key":"metadata/compact","values_before_compaction":["v1","v2","v3"],"value_after_recovery":"v4"},
+  "expect": {"compaction_detected":true,"recovery_snapshot_value":"v3","resumed_observed_values":["v4"],"gap_detected":false}
+}

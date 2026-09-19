@@ -1,0 +1,13 @@
+{
+  "scenario_version": 1,
+  "operation": "participant_runtime_semantics",
+  "participant": {
+    "instance": "node-a",
+    "initial_session": "p1",
+    "state_model": "LeaderStandby"
+  },
+  "handler_behaviors": {},
+  "steps": [
+    {"op": "checkpoint", "id": "participant-ready"}
+  ]
+}

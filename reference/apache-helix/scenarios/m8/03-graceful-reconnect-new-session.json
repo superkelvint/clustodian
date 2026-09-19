@@ -1,0 +1,15 @@
+{
+  "scenario_version": 1,
+  "operation": "participant_session_semantics",
+  "instances": ["node-a"],
+  "resources": [],
+  "steps": [
+    {"op": "connect", "instance": "node-a", "session": "a1"},
+    {"op": "disconnect", "instance": "node-a", "session": "a1"},
+    {"op": "connect", "instance": "node-a", "session": "a2"},
+    {"op": "checkpoint", "id": "reconnected"}
+  ],
+  "session_comparisons": [
+    {"left": "a1", "right": "a2"}
+  ]
+}

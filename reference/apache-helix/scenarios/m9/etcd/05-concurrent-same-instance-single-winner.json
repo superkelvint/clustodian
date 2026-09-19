@@ -1,0 +1,7 @@
+{
+  "scenario_version": 1,
+  "operation": "etcd_coordination_semantics",
+  "case": "concurrent_same_instance_single_winner",
+  "parameters": {"instance":"node-a","lease_ttl_seconds":10,"attempts":2},
+  "expect": {"successful_registrations":1,"failed_registrations":1,"exactly_one_live_session":true}
+}

@@ -1,0 +1,39 @@
+{
+  "checkpoints": [
+    {
+      "active_current_state": {
+        "node-a": {
+          "resources": {
+            "documents": {
+              "documents_0": "LEADER"
+            }
+          },
+          "session": "a1"
+        },
+        "node-b": {
+          "resources": {
+            "documents": {
+              "documents_0": "STANDBY"
+            }
+          },
+          "session": "b1"
+        }
+      },
+      "external_view": {
+        "documents": {
+          "documents_0": {
+            "node-a": "LEADER",
+            "node-b": "STANDBY"
+          }
+        }
+      },
+      "id": "startup-stable",
+      "live_instances": {
+        "node-a": "a1",
+        "node-b": "b1"
+      },
+      "pending_transitions": []
+    }
+  ],
+  "operation": "controller_runtime_semantics"
+}

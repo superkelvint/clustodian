@@ -1,0 +1,67 @@
+{
+  "scenario_version": 2,
+  "operation": "controller_election_failover_semantics",
+  "kind": "election_focus",
+  "name": "04-rapid-failover-chain",
+  "description": "repeated failover",
+  "cluster": {
+    "state_model": "LeaderStandby",
+    "controllers": [
+      "controller-a",
+      "controller-b",
+      "controller-c"
+    ],
+    "participants": [],
+    "resources": []
+  },
+  "steps": [
+    {
+      "op": "start_controllers",
+      "controllers": [
+        "controller-a",
+        "controller-b",
+        "controller-c"
+      ]
+    },
+    {
+      "op": "await_single_active_controller"
+    },
+    {
+      "op": "checkpoint",
+      "name": "term1"
+    },
+    {
+      "op": "kill_active_controller"
+    },
+    {
+      "op": "await_single_active_controller"
+    },
+    {
+      "op": "checkpoint",
+      "name": "term2"
+    },
+    {
+      "op": "restart_last_killed_controller"
+    },
+    {
+      "op": "kill_active_controller"
+    },
+    {
+      "op": "await_single_active_controller"
+    },
+    {
+      "op": "checkpoint",
+      "name": "term3"
+    }
+  ],
+  "expectations": {
+    "settled_checkpoints": [
+      "term1",
+      "term2",
+      "term3"
+    ],
+    "min_controller_failovers": 2,
+    "require_stale_controller_fence": false,
+    "require_session_replacement": false
+  }
+}

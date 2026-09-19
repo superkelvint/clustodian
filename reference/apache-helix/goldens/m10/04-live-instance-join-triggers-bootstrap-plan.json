@@ -1,0 +1,68 @@
+{
+  "checkpoints": [
+    {
+      "active_current_state": {
+        "node-a": {
+          "resources": {
+            "documents": {
+              "documents_0": "LEADER"
+            }
+          },
+          "session": "a1"
+        }
+      },
+      "external_view": {
+        "documents": {
+          "documents_0": {
+            "node-a": "LEADER"
+          }
+        }
+      },
+      "id": "before-join",
+      "live_instances": {
+        "node-a": "a1"
+      },
+      "pending_transitions": []
+    },
+    {
+      "active_current_state": {
+        "node-a": {
+          "resources": {
+            "documents": {
+              "documents_0": "LEADER"
+            }
+          },
+          "session": "a1"
+        },
+        "node-b": {
+          "resources": {},
+          "session": "b1"
+        }
+      },
+      "external_view": {
+        "documents": {
+          "documents_0": {
+            "node-a": "LEADER"
+          }
+        }
+      },
+      "id": "after-join",
+      "live_instances": {
+        "node-a": "a1",
+        "node-b": "b1"
+      },
+      "pending_transitions": [
+        {
+          "from": "OFFLINE",
+          "instance": "node-b",
+          "message_type": "STATE_TRANSITION",
+          "partition": "documents_0",
+          "resource": "documents",
+          "target_session": "b1",
+          "to": "STANDBY"
+        }
+      ]
+    }
+  ],
+  "operation": "controller_runtime_semantics"
+}

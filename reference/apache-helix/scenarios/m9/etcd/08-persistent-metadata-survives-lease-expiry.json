@@ -1,0 +1,7 @@
+{
+  "scenario_version": 1,
+  "operation": "etcd_coordination_semantics",
+  "case": "persistent_metadata_survives_lease_expiry",
+  "parameters": {"instance":"node-a","metadata_key":"state-models/LeaderStandby","metadata_value":"schema-v1","lease_ttl_seconds":2},
+  "expect": {"live_after_expiry":false,"metadata_value_after_expiry":"schema-v1"}
+}

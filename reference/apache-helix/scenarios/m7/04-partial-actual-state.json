@@ -1,0 +1,21 @@
+{
+  "scenario_version": 1,
+  "operation": "compute_external_view_and_routing",
+  "instances": ["node-a", "node-b", "node-c"],
+  "resources": [
+    {
+      "name": "documents",
+      "current_state": {
+        "documents_0": {
+          "node-a": "LEADER",
+          "node-b": "STANDBY"
+        }
+      }
+    }
+  ],
+  "routing_queries": [
+    {"id": "leader", "resource": "documents", "partition": "documents_0", "state": "LEADER"},
+    {"id": "standby", "resource": "documents", "partition": "documents_0", "state": "STANDBY"},
+    {"id": "offline", "resource": "documents", "partition": "documents_0", "state": "OFFLINE"}
+  ]
+}

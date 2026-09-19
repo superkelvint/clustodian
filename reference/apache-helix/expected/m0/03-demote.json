@@ -1,0 +1,1 @@
+{"result_schema_version":1,"oracle":{"implementation":"apache-helix","helix_version":"2.0.1","helix_tag":"helix-2.0.1","commit_provenance":"tag = helix-2.0.1; commit metadata unavailable"},"operation":"generate_transitions","transitions":[{"resource":"documents","partition":"documents_0","instance":"node-a","from":"LEADER","to":"STANDBY","message_type":"STATE_TRANSITION"}]}

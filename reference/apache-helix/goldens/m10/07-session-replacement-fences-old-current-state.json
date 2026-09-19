@@ -1,0 +1,92 @@
+{
+  "checkpoints": [
+    {
+      "active_current_state": {
+        "node-a": {
+          "resources": {
+            "documents": {
+              "documents_0": "LEADER"
+            }
+          },
+          "session": "a1"
+        },
+        "node-b": {
+          "resources": {
+            "documents": {
+              "documents_0": "STANDBY"
+            }
+          },
+          "session": "b1"
+        }
+      },
+      "external_view": {
+        "documents": {
+          "documents_0": {
+            "node-a": "LEADER",
+            "node-b": "STANDBY"
+          }
+        }
+      },
+      "id": "before-restart",
+      "live_instances": {
+        "node-a": "a1",
+        "node-b": "b1"
+      },
+      "pending_transitions": []
+    },
+    {
+      "active_current_state": {
+        "node-a": {
+          "resources": {
+            "documents": {
+              "documents_0": "OFFLINE"
+            }
+          },
+          "session": "a2"
+        },
+        "node-b": {
+          "resources": {
+            "documents": {
+              "documents_0": "STANDBY"
+            }
+          },
+          "session": "b1"
+        }
+      },
+      "external_view": {
+        "documents": {
+          "documents_0": {
+            "node-a": "OFFLINE",
+            "node-b": "STANDBY"
+          }
+        }
+      },
+      "id": "after-restart-before-new-state",
+      "live_instances": {
+        "node-a": "a2",
+        "node-b": "b1"
+      },
+      "pending_transitions": [
+        {
+          "from": "OFFLINE",
+          "instance": "node-a",
+          "message_type": "STATE_TRANSITION",
+          "partition": "documents_0",
+          "resource": "documents",
+          "target_session": "a2",
+          "to": "STANDBY"
+        },
+        {
+          "from": "STANDBY",
+          "instance": "node-b",
+          "message_type": "STATE_TRANSITION",
+          "partition": "documents_0",
+          "resource": "documents",
+          "target_session": "b1",
+          "to": "LEADER"
+        }
+      ]
+    }
+  ],
+  "operation": "controller_runtime_semantics"
+}

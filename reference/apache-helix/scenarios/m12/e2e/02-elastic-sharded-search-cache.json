@@ -1,0 +1,125 @@
+{
+  "scenario_version": 2,
+  "operation": "controller_election_failover_semantics",
+  "kind": "application_e2e",
+  "name": "02-elastic-sharded-search-cache",
+  "description": "elastic search/cache",
+  "cluster": {
+    "state_model": "LeaderStandby",
+    "controllers": [
+      "controller-a",
+      "controller-b",
+      "controller-c"
+    ],
+    "participants": [
+      {
+        "id": "search-a",
+        "zone": "z1",
+        "session": "a1"
+      },
+      {
+        "id": "search-b",
+        "zone": "z2",
+        "session": "b1"
+      },
+      {
+        "id": "search-c",
+        "zone": "z3",
+        "session": "c1"
+      },
+      {
+        "id": "search-d",
+        "zone": "z4",
+        "session": "d1",
+        "initially_stopped": true
+      }
+    ],
+    "resources": [
+      {
+        "name": "catalog",
+        "partitions": 24,
+        "replicas": 2,
+        "rebalance": "CRUSH"
+      }
+    ]
+  },
+  "steps": [
+    {
+      "op": "start_controllers",
+      "controllers": [
+        "controller-a",
+        "controller-b",
+        "controller-c"
+      ]
+    },
+    {
+      "op": "start_participants",
+      "instances": [
+        "search-a",
+        "search-b",
+        "search-c"
+      ]
+    },
+    {
+      "op": "create_resources"
+    },
+    {
+      "op": "await_converged"
+    },
+    {
+      "op": "checkpoint",
+      "name": "three_node_ready"
+    },
+    {
+      "op": "block_next_application_transition"
+    },
+    {
+      "op": "start_participant",
+      "instance": "search-d"
+    },
+    {
+      "op": "await_pending_transition"
+    },
+    {
+      "op": "checkpoint",
+      "name": "scale_out_in_progress"
+    },
+    {
+      "op": "kill_active_controller"
+    },
+    {
+      "op": "await_single_active_controller"
+    },
+    {
+      "op": "release_blocked_application_transition"
+    },
+    {
+      "op": "await_converged"
+    },
+    {
+      "op": "checkpoint",
+      "name": "four_node_ready_after_controller_failover"
+    },
+    {
+      "op": "stop_participant",
+      "instance": "search-b"
+    },
+    {
+      "op": "await_converged"
+    },
+    {
+      "op": "checkpoint",
+      "name": "after_node_removal"
+    }
+  ],
+  "expectations": {
+    "settled_checkpoints": [
+      "three_node_ready",
+      "four_node_ready_after_controller_failover",
+      "after_node_removal"
+    ],
+    "min_controller_failovers": 1,
+    "require_stale_controller_fence": false,
+    "require_session_replacement": false
+  }
+}

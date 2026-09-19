@@ -1,0 +1,23 @@
+[package]
+name = "clustodian-sharded-search"
+version = "0.1.0"
+edition = "2021"
+publish = false
+description = "A sharded search-cluster showcase for Clustodian"
+
+[features]
+shuttle = []
+
+[dependencies]
+clustodian = { path = "../.." }
+serde_json = "1"
+tokio = { version = "1.53.1", features = ["macros", "rt-multi-thread", "signal", "sync", "time"] }
+
+[dev-dependencies]
+clustodian-test-support = { path = "../../tools/clustodian-test-support" }
+etcd-client = "0.15.0"
+tempfile = "3.27.0"
+
+[[bin]]
+name = "sharded-search"
+path = "src/main.rs"

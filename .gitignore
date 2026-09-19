@@ -1,0 +1,18 @@
+# Rust build output
+/target/
+**/target/
+
+# External Apache Helix source and Maven caches
+/reference/apache-helix-2.0.1/
+/reference/apache-helix/.m2/
+/reference/apache-helix/**/target/
+
+# Local runtime and chaos artifacts
+/runtime/
+/artifacts/
+/tools/clustodian-chaos/scripts/__pycache__/
+
+# Generated/editor files
+**/*.rs.bk
+**/__pycache__/
+*.log

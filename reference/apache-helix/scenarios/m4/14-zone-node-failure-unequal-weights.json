@@ -1,0 +1,33 @@
+{
+  "scenario_version": 1,
+  "operation": "compute_crush_assignment",
+  "resource": "documents",
+  "partitions": [
+    "documents_0", "documents_1", "documents_2", "documents_3",
+    "documents_4", "documents_5", "documents_6", "documents_7",
+    "documents_8", "documents_9", "documents_10", "documents_11",
+    "documents_12", "documents_13", "documents_14", "documents_15"
+  ],
+  "state_counts": [
+    {"state": "LEADER", "count": 1},
+    {"state": "STANDBY", "count": 2}
+  ],
+  "max_partitions_per_instance": -1,
+  "instances": [
+    {"name": "a-0", "domain": {"zone": "zone-a", "instance": "a-0"}},
+    {"name": "a-1", "domain": {"zone": "zone-a", "instance": "a-1"}},
+    {"name": "a-2", "domain": {"zone": "zone-a", "instance": "a-2"}},
+    {"name": "b-0", "domain": {"zone": "zone-b", "instance": "b-0"}},
+    {"name": "b-1", "domain": {"zone": "zone-b", "instance": "b-1"}},
+    {"name": "b-2", "domain": {"zone": "zone-b", "instance": "b-2"}},
+    {"name": "c-0", "domain": {"zone": "zone-c", "instance": "c-0"}},
+    {"name": "c-1", "domain": {"zone": "zone-c", "instance": "c-1"}},
+    {"name": "c-2", "domain": {"zone": "zone-c", "instance": "c-2"}}
+  ],
+  "live_instances": ["a-0", "a-1", "b-0", "b-1", "b-2", "c-0", "c-1", "c-2"],
+  "topology": {
+    "path": "/zone/instance",
+    "fault_zone_type": "zone",
+    "end_node_type": "instance"
+  }
+}

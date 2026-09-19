@@ -1,0 +1,7 @@
+{
+  "scenario_version": 1,
+  "operation": "etcd_coordination_semantics",
+  "case": "snapshot_watch_no_gap",
+  "parameters": {"key":"metadata/watch","initial_value":"v1","mutations":["v2","v3"]},
+  "expect": {"snapshot_value":"v1","observed_values":["v2","v3"],"monotonic_revisions":true,"gap_detected":false}
+}

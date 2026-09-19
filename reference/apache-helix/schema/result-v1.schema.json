@@ -1,0 +1,104 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://clustodian.local/reference/apache-helix/result-v1.schema.json",
+  "title": "Clustodian Helix M0 result",
+  "type": "object",
+  "required": ["result_schema_version", "oracle", "operation"],
+  "properties": {
+    "result_schema_version": {"const": 1},
+    "oracle": {
+      "type": "object",
+      "required": ["implementation", "helix_version", "helix_tag", "commit_provenance"],
+      "properties": {
+        "implementation": {"const": "apache-helix"},
+        "helix_version": {"const": "2.0.1"},
+        "helix_tag": {"const": "helix-2.0.1"},
+        "commit_provenance": {"type": "string"}
+      },
+      "additionalProperties": false
+    },
+    "operation": {"enum": ["inspect_state_model", "generate_transitions", "compute_semi_auto_best_possible", "compute_crush_assignment", "select_transitions"]},
+    "transitions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["resource", "partition", "instance", "from", "to", "message_type"],
+        "properties": {
+          "resource": {"type": "string"},
+          "partition": {"type": "string"},
+          "instance": {"type": "string"},
+          "from": {"type": "string"},
+          "to": {"type": "string"},
+          "message_type": {"type": "string"}
+        },
+        "additionalProperties": false
+      }
+    },
+    "selected_transitions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["resource", "partition", "instance", "from", "to", "message_type"],
+        "properties": {
+          "resource": {"type": "string"},
+          "partition": {"type": "string"},
+          "instance": {"type": "string"},
+          "from": {"type": "string"},
+          "to": {"type": "string"},
+          "message_type": {"type": "string"}
+        },
+        "additionalProperties": false
+      }
+    },
+    "best_possible_state": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "additionalProperties": {"type": "string"}
+      }
+    },
+    "preference_lists": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "array",
+        "items": {"type": "string", "minLength": 1}
+      }
+    },
+    "state_model": {
+      "type": "object",
+      "required": ["name", "initial_state", "valid", "top_state", "single_top_state", "states_priority", "transition_priority", "state_counts", "next_states"],
+      "properties": {
+        "name": {"type": "string"},
+        "initial_state": {"type": "string"},
+        "valid": {"type": "boolean"},
+        "top_state": {"type": "string"},
+        "single_top_state": {"type": "boolean"},
+        "states_priority": {"type": "array", "items": {"type": "string"}},
+        "transition_priority": {"type": "array", "items": {"type": "string"}},
+        "state_counts": {"type": "object", "additionalProperties": {"type": ["string", "null"]}},
+        "next_states": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["from", "to", "next"],
+            "properties": {
+              "from": {"type": "string"},
+              "to": {"type": "string"},
+              "next": {"type": ["string", "null"]}
+            },
+            "additionalProperties": false
+          }
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "oneOf": [
+    {"required": ["transitions"], "not": {"anyOf": [{"required": ["state_model"]}, {"required": ["best_possible_state"]}]}},
+    {"required": ["selected_transitions"], "not": {"anyOf": [{"required": ["state_model"]}, {"required": ["transitions"]}, {"required": ["best_possible_state"]}, {"required": ["preference_lists"]}]}},
+    {"required": ["state_model"], "not": {"anyOf": [{"required": ["transitions"]}, {"required": ["best_possible_state"]}]}},
+    {"required": ["best_possible_state"], "not": {"anyOf": [{"required": ["state_model"]}, {"required": ["transitions"]}]}},
+    {"required": ["preference_lists"], "not": {"anyOf": [{"required": ["state_model"]}, {"required": ["transitions"]}, {"required": ["best_possible_state"]}]}}
+  ],
+  "additionalProperties": false
+}

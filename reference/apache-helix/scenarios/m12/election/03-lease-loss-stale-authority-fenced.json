@@ -1,0 +1,34 @@
+{
+  "scenario_version": 2,
+  "operation": "controller_election_failover_semantics",
+  "kind": "election_focus",
+  "name": "03-lease-loss-stale-authority-fenced",
+  "description": "direct stale authority rejection",
+  "cluster": {
+    "state_model": "LeaderStandby",
+    "controllers": [
+      "controller-a",
+      "controller-b",
+      "controller-c"
+    ],
+    "participants": [],
+    "resources": []
+  },
+  "steps": [
+    {
+      "op": "run_direct_fence_probe"
+    },
+    {
+      "op": "checkpoint",
+      "name": "after_fence_probe"
+    }
+  ],
+  "expectations": {
+    "settled_checkpoints": [
+      "after_fence_probe"
+    ],
+    "min_controller_failovers": 1,
+    "require_stale_controller_fence": true,
+    "require_session_replacement": false
+  }
+}

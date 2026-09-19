@@ -1,0 +1,28 @@
+{
+  "scenario_version": 1,
+  "operation": "participant_session_semantics",
+  "instances": ["node-a"],
+  "resources": [
+    {"name": "documents", "partitions": ["documents_0"]}
+  ],
+  "steps": [
+    {"op": "connect", "instance": "node-a", "session": "a1"},
+    {
+      "op": "publish_current_state",
+      "instance": "node-a",
+      "session": "a1",
+      "resource": "documents",
+      "states": {"documents_0": "LEADER"}
+    },
+    {"op": "disconnect", "instance": "node-a", "session": "a1"},
+    {
+      "op": "inject_session_current_state",
+      "instance": "node-a",
+      "session": "a1",
+      "resource": "documents",
+      "states": {"documents_0": "LEADER"}
+    },
+    {"op": "checkpoint", "id": "offline-with-stale-metadata"}
+  ],
+  "session_comparisons": []
+}

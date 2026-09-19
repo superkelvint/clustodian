@@ -1,0 +1,163 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://clustodian.local/reference/apache-helix/scenario-v1.schema.json",
+  "title": "Clustodian Helix scenario",
+  "type": "object",
+  "required": ["scenario_version", "operation"],
+  "properties": {
+    "scenario_version": {"const": 1},
+    "operation": {"enum": ["inspect_state_model", "generate_transitions", "compute_semi_auto_best_possible", "compute_crush_assignment", "select_transitions"]},
+    "state_model": {
+      "type": "object",
+      "required": ["kind", "name"],
+      "properties": {
+        "kind": {"const": "built_in"},
+        "name": {"const": "LeaderStandby"}
+      },
+      "additionalProperties": false
+    },
+    "resource": {
+      "anyOf": [
+        {
+          "type": "object",
+          "required": ["name", "partitions"],
+          "properties": {
+            "name": {"type": "string", "minLength": 1},
+            "partitions": {"type": "array", "items": {"type": "string", "minLength": 1}, "minItems": 1}
+          },
+          "additionalProperties": false
+        },
+        {"type": "string", "minLength": 1}
+      ]
+    },
+    "partitions": {"type": "array", "items": {"type": "string", "minLength": 1}, "minItems": 1},
+    "instances": {
+      "type": "array",
+      "items": {
+        "anyOf": [
+          {
+            "type": "object",
+            "required": ["name", "session_id"],
+            "properties": {
+              "name": {"type": "string", "minLength": 1},
+              "session_id": {"type": "string", "minLength": 1}
+            },
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "required": ["name", "domain"],
+            "properties": {
+              "name": {"type": "string", "minLength": 1},
+              "domain": {"type": "object", "minProperties": 1, "additionalProperties": {"type": "string", "minLength": 1}}
+            },
+            "additionalProperties": false
+          }
+        ]
+      },
+      "minItems": 1
+    },
+    "current_state": {"$ref": "#/$defs/state_map"},
+    "target_state": {"$ref": "#/$defs/state_map"},
+    "replicas": {"type": "integer", "minimum": 0},
+    "live_instances": {"type": "array", "items": {"type": "string", "minLength": 1}},
+    "preference_lists": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "array",
+        "items": {"type": "string", "minLength": 1}
+      }
+    },
+    "state_counts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["state", "count"],
+        "properties": {
+          "state": {"type": "string", "minLength": 1},
+          "count": {"type": "integer", "minimum": 0}
+        },
+        "additionalProperties": false
+      },
+      "minItems": 1
+    },
+    "max_partitions_per_instance": {"const": -1},
+    "topology": {
+      "type": "object",
+      "required": ["path", "fault_zone_type", "end_node_type"],
+      "properties": {
+        "path": {"type": "string", "minLength": 1},
+        "fault_zone_type": {"type": "string", "minLength": 1},
+        "end_node_type": {"type": "string", "minLength": 1}
+      },
+      "additionalProperties": false
+    },
+    "queries": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["from", "to"],
+        "properties": {
+          "from": {"type": "string", "minLength": 1},
+          "to": {"type": "string", "minLength": 1}
+        },
+        "additionalProperties": false
+      }
+    },
+    "candidate_transitions": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/transition_spec"}
+    },
+    "pending_transitions": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/transition_spec"}
+    }
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"operation": {"const": "compute_crush_assignment"}}},
+      "then": {"required": ["resource", "partitions", "state_counts", "max_partitions_per_instance", "instances", "live_instances", "topology"]}
+    },
+    {
+      "if": {"properties": {"operation": {"not": {"const": "compute_crush_assignment"}}}},
+      "then": {"required": ["state_model"]}
+    },
+    {
+      "if": {"properties": {"operation": {"const": "generate_transitions"}}},
+      "then": {"required": ["resource", "instances", "current_state", "target_state"]}
+    },
+    {
+      "if": {"properties": {"operation": {"const": "inspect_state_model"}}},
+      "then": {"required": ["queries"]}
+    },
+    {
+      "if": {"properties": {"operation": {"const": "compute_semi_auto_best_possible"}}},
+      "then": {"required": ["resource", "replicas", "instances", "live_instances", "preference_lists", "current_state"]}
+    },
+    {
+      "if": {"properties": {"operation": {"const": "select_transitions"}}},
+      "then": {"required": ["resource", "replicas", "instances", "live_instances", "preference_lists", "current_state", "candidate_transitions", "pending_transitions"]}
+    }
+  ],
+  "$defs": {
+    "state_map": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "additionalProperties": {"type": "string"}
+      }
+    },
+    "transition_spec": {
+      "type": "object",
+      "required": ["partition", "instance", "from", "to"],
+      "properties": {
+        "partition": {"type": "string", "minLength": 1},
+        "instance": {"type": "string", "minLength": 1},
+        "from": {"type": "string", "minLength": 1},
+        "to": {"type": "string", "minLength": 1}
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

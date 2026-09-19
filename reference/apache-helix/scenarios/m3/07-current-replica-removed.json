@@ -1,0 +1,17 @@
+{
+  "scenario_version": 1,
+  "operation": "compute_semi_auto_best_possible",
+  "state_model": {"kind": "built_in", "name": "LeaderStandby"},
+  "resource": {"name": "documents", "partitions": ["documents_0"]},
+  "replicas": 2,
+  "instances": [
+    {"name": "node-a", "session_id": "session-a"},
+    {"name": "node-b", "session_id": "session-b"},
+    {"name": "node-c", "session_id": "session-c"}
+  ],
+  "live_instances": ["node-a", "node-b", "node-c"],
+  "preference_lists": {"documents_0": ["node-a", "node-b"]},
+  "current_state": {
+    "documents_0": {"node-a": "LEADER", "node-b": "STANDBY", "node-c": "STANDBY"}
+  }
+}
