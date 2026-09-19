@@ -30,7 +30,7 @@ jobs:
           - test --workspace --lib --bins --all-features --exclude clustodian
           - test --workspace --doc
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - uses: dtolnay/rust-toolchain@stable
         with:
           components: clippy,rustfmt
@@ -44,7 +44,7 @@ jobs:
     name: MSRV
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - uses: dtolnay/rust-toolchain@1.80.0
       - name: Install protobuf compiler
         run: sudo apt-get update && sudo apt-get install --yes protobuf-compiler
@@ -54,7 +54,7 @@ jobs:
     name: Package validation
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - uses: dtolnay/rust-toolchain@stable
       - name: Install protobuf compiler
         run: sudo apt-get update && sudo apt-get install --yes protobuf-compiler
@@ -82,7 +82,7 @@ jobs:
           ETCD_INITIAL_CLUSTER_STATE: new
           ETCD_INITIAL_CLUSTER_TOKEN: clustodian-ci
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - uses: dtolnay/rust-toolchain@stable
       - name: Install protobuf compiler
         run: sudo apt-get update && sudo apt-get install --yes protobuf-compiler
