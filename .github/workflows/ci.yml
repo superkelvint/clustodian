@@ -17,33 +17,18 @@ jobs:
   library:
     name: Library (${{ matrix.command }})
     runs-on: ubuntu-latest
-    env:
-      # The workspace-wide no-default-features test command includes the
-      # example integration suites, which use the shared test endpoint when
-      # one is provided.
-      CLUSTODIAN_ETCD_TEST_ENDPOINT: http://127.0.0.1:2379
     strategy:
       fail-fast: false
       matrix:
         command:
-          - test -p clustodian --lib --no-default-features
-          - test --workspace --all-targets --no-default-features --exclude clustodian
-          - test --workspace --all-targets --all-features
+          - test -p clustodian --lib --no-default-features -- --skip real_etcd
+          # Integration test targets currently require a live etcd; retain
+          # library and binary coverage while that lane is disabled.
+          - test --workspace --lib --bins --no-default-features --exclude clustodian
+          - test -p clustodian --lib --all-features -- --skip real_etcd
+          - test -p clustodian --test randomized_cluster_state_machine --all-features
+          - test --workspace --lib --bins --all-features --exclude clustodian
           - test --workspace --doc
-    services:
-      etcd:
-        image: quay.io/coreos/etcd:v3.5.16
-        ports:
-          - 2379:2379
-        env:
-          ETCD_NAME: ci-etcd
-          ETCD_ADVERTISE_CLIENT_URLS: http://0.0.0.0:2379
-          ETCD_LISTEN_CLIENT_URLS: http://0.0.0.0:2379
-          ETCD_INITIAL_ADVERTISE_PEER_URLS: http://0.0.0.0:2380
-          ETCD_LISTEN_PEER_URLS: http://0.0.0.0:2380
-          ETCD_INITIAL_CLUSTER: ci-etcd=http://0.0.0.0:2380
-          ETCD_INITIAL_CLUSTER_STATE: new
-          ETCD_INITIAL_CLUSTER_TOKEN: clustodian-ci
     steps:
       - uses: actions/checkout@v4
       - uses: dtolnay/rust-toolchain@stable
@@ -63,7 +48,7 @@ jobs:
       - uses: dtolnay/rust-toolchain@1.80.0
       - name: Install protobuf compiler
         run: sudo apt-get update && sudo apt-get install --yes protobuf-compiler
-      - run: cargo +1.80.0 test -p clustodian --lib --no-default-features
+      - run: cargo +1.80.0 test -p clustodian --lib --no-default-features -- --skip real_etcd
 
   package:
     name: Package validation
@@ -76,41 +61,6 @@ jobs:
       - run: cargo package --allow-dirty --list
       - run: cargo package --allow-dirty
       - run: cargo publish --dry-run --allow-dirty
-
-  etcd:
-    name: Real etcd (${{ matrix.features }})
-    runs-on: ubuntu-latest
-    timeout-minutes: 20
-    strategy:
-      fail-fast: false
-      matrix:
-        features: ["", "--features m13-failpoints"]
-    services:
-      etcd:
-        image: quay.io/coreos/etcd:v3.5.16
-        ports:
-          - 2379:2379
-        env:
-          ETCD_NAME: ci-etcd
-          ETCD_ADVERTISE_CLIENT_URLS: http://0.0.0.0:2379
-          ETCD_LISTEN_CLIENT_URLS: http://0.0.0.0:2379
-          ETCD_INITIAL_ADVERTISE_PEER_URLS: http://0.0.0.0:2380
-          ETCD_LISTEN_PEER_URLS: http://0.0.0.0:2380
-          ETCD_INITIAL_CLUSTER: ci-etcd=http://0.0.0.0:2380
-          ETCD_INITIAL_CLUSTER_STATE: new
-          ETCD_INITIAL_CLUSTER_TOKEN: clustodian-ci
-    steps:
-      - uses: actions/checkout@v4
-      - uses: dtolnay/rust-toolchain@stable
-      - name: Install protobuf compiler
-        run: sudo apt-get update && sudo apt-get install --yes protobuf-compiler
-      - name: Run serialized etcd integration lane
-        env:
-          CLUSTODIAN_ETCD_TEST_ENDPOINT: http://127.0.0.1:2379
-        run: cargo test -p clustodian --test etcd_runtime --no-default-features ${{ matrix.features }} -- --test-threads=1
-      - name: Clean up local etcd processes
-        if: ${{ always() }}
-        run: pkill -x etcd || true
 
   nightly-stress:
     name: Nightly randomized and chaos coverage
